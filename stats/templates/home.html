@@ -1,0 +1,107 @@
+{% extends "index.html" %}
+{% load mathfilters %}
+{% block content %}
+<div class="container mx-auto">
+
+    <div class="row text-center">
+        <h1>Welcome to Steam Stats!</h1>
+    </div>
+    <div class="row text-center">
+        <h2>Your games</h2>
+    </div>
+    <div class="row">
+        <ul class="nav nav-tabs" id="home-section-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="recentgames-tab" data-toggle="tab" href="#recentgames" role="tab"
+                    aria-controls="recentgames" aria-selected="false">
+                    Recently Played
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="allgames-tab" data-toggle="tab" href="#allgames" role="tab"
+                    aria-controls="allgames" aria-selected="true">All Games</a>
+            </li>
+        </ul>
+    </div>
+
+    <div class="tab-content" id="myTabContent">
+        <div class="tab-pane fade show active" id="allgames" role="tabpanel" aria-labelledby="allgames-tab">
+            <ul class="list-group list-group-flush">
+
+                {% for game in games %}
+                {% if game.playtime_forever != 0 %}
+
+                <li class="list-group-item">
+                    <div class="row">
+
+                        <div class="col">
+                            <h6>{{ game.name }}</h6>
+                        </div>
+                        <div class="col">You've played this game for: {{game.playtime_forever}} minutes or
+                            {{ game.playtime_forever | div:60| truncatechars:6}} hours
+                        </div>
+                        <div class="col"><a href="/game/{{game.appid}}" class="btn btn-dark">See Details</a></div>
+                    </div>
+                </li>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="recentgames" role="tabpanel" aria-labelledby="recentgames-tab">
+            {% for recent_game in recent_games %}
+            <div>
+                <div>{{ recent_game.name }}</div>
+                <div>Playtime Last two weeks: {{recent_game.playtime_2weeks}} minutes or
+                    {{ recent_game.playtime_2weeks | div:60| truncatechars:6}} hours
+                </div>
+                <div>Total playtime: {{recent_game.playtime_forever}} minutes or
+                    {{ recent_game.playtime_forever | div:60| truncatechars:6}} hours</div>
+            </div>
+            <canvas id="recentGameChart" width="100" height="100"></canvas>
+            {% endfor %}
+
+        </div>
+    </div>
+    <script>
+        console.log("creating chart");
+        var ctx = document.getElementById('recentGameChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+                datasets: [{
+                    label: 'Hours Played',
+                    data: [12, 19, 3, 5, 2, 3, 10],
+                    backgroundColor: [
+                        'rgba(255, 99, 132, 0.2)',
+                        'rgba(54, 162, 235, 0.2)',
+                        'rgba(255, 206, 86, 0.2)',
+                        'rgba(75, 192, 192, 0.2)',
+                        'rgba(153, 102, 255, 0.2)',
+                        'rgba(255, 159, 64, 0.2)'
+                    ],
+                    borderColor: [
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 206, 86, 1)',
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(153, 102, 255, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            responsive: true,
+            maintainAspectRatio: true,
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+    {% endblock %}

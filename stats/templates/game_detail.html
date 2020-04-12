@@ -1,0 +1,105 @@
+{% extends "index.html" %}
+
+<head>
+    {% if game_name %}
+    <title>Steam Stats | {{game_name}}</title>
+    {% endif %}
+</head>
+{% block content %}
+<div class="container">
+    <div class="row">
+        {% if game_name %}
+        <h1>{{game_name}}</h1>
+        {% endif %}
+    </div>
+    <div class="row">
+        <ul class="nav nav-tabs" id="game-section-tabs" role="tablist">
+            <li class="nav-item">
+                <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats"
+                    aria-selected="false">
+                    Stats
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active" id="news-tab" data-toggle="tab" href="#news" role="tab" aria-controls="news"
+                    aria-selected="true">News</a>
+            </li>
+        </ul>
+    </div>
+</div>
+
+
+<div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="news" role="tabpanel" aria-labelledby="news-tab">
+        <div class="container">
+            {% if news_items%}
+            {% for news in news_items %}
+
+            <div class='row'>
+                <div>
+                    <h3>{{ news.title }}</h3>
+                </div>
+                <div>{{ news.contents| safe}}</div>
+                <div><a href="{{news.url}}">See Full article</a></div>
+            </div>
+
+            {% endfor %}
+            {% else%}
+            <div class="row">
+                <p>No news for this game!</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+        <div class="container">
+            <div class="row" style="height: 400px;">
+                <canvas id="myChart" width="100" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    console.log("creating chart");
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            datasets: [{
+                label: 'Hours Played',
+                data: [12, 19, 3, 5, 2, 3, 10],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        responsive: true,
+        maintainAspectRatio: true,
+        options: {
+            scales: {
+                yAxes: [{
+                    ticks: {
+                        beginAtZero: true
+                    }
+                }]
+            }
+        }
+    });
+</script>
+{% endblock %}
