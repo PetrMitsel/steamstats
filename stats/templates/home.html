@@ -1,107 +1,163 @@
-{% extends "index.html" %}
-{% load mathfilters %}
-{% block content %}
-<div class="container mx-auto">
-
-    <div class="row text-center">
-        <h1>Welcome to Steam Stats!</h1>
-    </div>
-    <div class="row text-center">
-        <h2>Your games</h2>
-    </div>
+{% extends "index.html" %} {% load mathfilters %} {% block content %}
+{{ recent_games|json_script:"recent-games" }}
+<div class="jumbotron text-center home-banner">
+  <div class="container">
     <div class="row">
-        <ul class="nav nav-tabs" id="home-section-tabs" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link" id="recentgames-tab" data-toggle="tab" href="#recentgames" role="tab"
-                    aria-controls="recentgames" aria-selected="false">
-                    Recently Played
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" id="allgames-tab" data-toggle="tab" href="#allgames" role="tab"
-                    aria-controls="allgames" aria-selected="true">All Games</a>
-            </li>
-        </ul>
+      <div class="col">
+        <h1 class="mx-auto">Welcome to Steam Stats!</h1>
+      </div>
+      <div class="col" style="border-style: solid; border-color: black; background-color: whitesmoke;">
+        <div>{{profile_info.personaname}}</div>
+        <img src="{{profile_info.avatarmedium}}" alt="No avatar available">
+        <div><i class="fa fa-users" aria-hidden="true"></i> {{friends_list | length}} friends</div>
+        <div><i class="fa fa-gamepad" aria-hidden="true"></i> {{ games | length}} games</div>
+      </div>
     </div>
 
-    <div class="tab-content" id="myTabContent">
-        <div class="tab-pane fade show active" id="allgames" role="tabpanel" aria-labelledby="allgames-tab">
-            <ul class="list-group list-group-flush">
+  </div>
+</div>
 
-                {% for game in games %}
-                {% if game.playtime_forever != 0 %}
+<div class="container mx-auto">
+  <div class="row">
+    <ul class="nav nav-tabs" id="home-section-tabs" role="tablist">
+      <li class="nav-item">
+        <a class="nav-link active" id="recentgames-tab" data-toggle="tab" href="#recentgames" role="tab"
+          aria-controls="recentgames" aria-selected="false">
+          Recently Played
+        </a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="allgames-tab" data-toggle="tab" href="#allgames" role="tab" aria-controls="allgames"
+          aria-selected="true">All Games</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="friends-tab" data-toggle="tab" href="#friends" role="tab" aria-controls="friends"
+          aria-selected="true">Friends</a>
+      </li>
+    </ul>
+  </div>
+  <div class="row  home-tabs">
+    <div class="container tab-content" id="myTabContent">
+      <div class="tab-pane fade" id="allgames" role="tabpanel" aria-labelledby="allgames-tab">
+        <ul class="list-group list-group-flush home-tabs">
+          {% if games %}
+          {% for game in games %} {% if game.playtime_forever != 0 %}
 
-                <li class="list-group-item">
-                    <div class="row">
-
-                        <div class="col">
-                            <h6>{{ game.name }}</h6>
-                        </div>
-                        <div class="col">You've played this game for: {{game.playtime_forever}} minutes or
-                            {{ game.playtime_forever | div:60| truncatechars:6}} hours
-                        </div>
-                        <div class="col"><a href="/game/{{game.appid}}" class="btn btn-dark">See Details</a></div>
-                    </div>
-                </li>
-                {% endif %}
-                {% endfor %}
-            </ul>
-        </div>
-        <div class="tab-pane fade" id="recentgames" role="tabpanel" aria-labelledby="recentgames-tab">
-            {% for recent_game in recent_games %}
-            <div>
-                <div>{{ recent_game.name }}</div>
-                <div>Playtime Last two weeks: {{recent_game.playtime_2weeks}} minutes or
-                    {{ recent_game.playtime_2weeks | div:60| truncatechars:6}} hours
-                </div>
-                <div>Total playtime: {{recent_game.playtime_forever}} minutes or
-                    {{ recent_game.playtime_forever | div:60| truncatechars:6}} hours</div>
+          <li class="list-group-item home-tabs">
+            <div class="row">
+              <div class="col-sm">
+                {{ game.name }}
+              </div>
+              <div class="col-sm">
+                You've played this game for: {{game.playtime_forever}} minutes or
+                {{ game.playtime_forever | div:60| truncatechars:6}} hours
+              </div>
+              <div class="col-sm">
+                <a href="/game/{{game.appid}}" class="btn btn-dark btn-block">See Details</a>
+              </div>
             </div>
-            <canvas id="recentGameChart" width="100" height="100"></canvas>
-            {% endfor %}
-
+          </li>
+          {% endif %} {% endfor %}
+          {% else %}
+          <div> Could not fetch data from Steam Servers. Try again later.</div>
+          {% endif %}
+        </ul>
+      </div>
+      <div class="tab-pane fade show active" id="recentgames" role="tabpanel" aria-labelledby="recentgames-tab">
+        <div class='row'>
+          <div class="col col-sm">
+            <ul class="list-group list-group-flush">
+              {% for recent_game in recent_games %}
+              <li class="list-group-item home-tabs">
+                <div class="mb-2">{{ recent_game.name }}</div>
+                <div class="mb-2">
+                  Playtime Last two weeks: {{recent_game.playtime_2weeks}} minutes
+                  or {{recent_game.playtime_2weeks | div:60| truncatechars:6}} hours
+                </div>
+                <div class="mb-2">
+                  Total playtime: {{recent_game.playtime_forever}} minutes or
+                  {{recent_game.playtime_forever | div:60| truncatechars:6}} hours
+                </div>
+              </li>
+              {% endfor %}
+            </ul>
+          </div>
+          <div class="col col-sm">
+            <div class="chart-container">
+              <canvas id="recentGameChart" width="100" height="100" style="padding-top: 10px;"></canvas>
+            </div>
+          </div>
         </div>
+      </div>
+      <div class="tab-pane fade" id="friends" role="tabpanel" aria-labelledby="friends-tab"
+        style="padding-top: 10px; padding-bottom: 20px;">
+        <div class="row">
+          {% for friend in friends_list %}
+          <div class="col">
+
+            <div>{{friend.personaname}}</div>
+            <div>
+              <img src="{{friend.avatarfull}}" alt="No avatar available">
+            </div>
+
+          </div>
+          {% endfor %}
+        </div>
+
+      </div>
     </div>
-    <script>
-        console.log("creating chart");
-        var ctx = document.getElementById('recentGameChart').getContext('2d');
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-                datasets: [{
-                    label: 'Hours Played',
-                    data: [12, 19, 3, 5, 2, 3, 10],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(255, 206, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(255, 159, 64, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    borderWidth: 1
-                }]
-            },
-            responsive: true,
-            maintainAspectRatio: true,
-            options: {
-                scales: {
-                    yAxes: [{
-                        ticks: {
-                            beginAtZero: true
-                        }
-                    }]
-                }
-            }
-        });
-    </script>
-    {% endblock %}
+
+  </div>
+</div>
+
+
+<script>
+  var recentGames = JSON.parse(document.getElementById('recent-games').textContent);
+  var recentGameNames = recentGames.map(g => g.name);
+  var recentGamePlayTimes = recentGames.map(g => g.playtime_2weeks / 60);
+  var ctx = document.getElementById("recentGameChart").getContext("2d");
+  var myChart = new Chart(ctx, {
+    type: "doughnut",
+    data: {
+      labels: recentGameNames,
+      datasets: [
+        {
+          label: "Hours Played",
+          data: recentGamePlayTimes,
+          // data: [1, 3],
+          backgroundColor: [
+            "#82a0d8",
+            "#ca82d8",
+            "rgba(255, 206, 86, 0.2)",
+            "rgba(75, 192, 192, 0.2)",
+            "rgba(153, 102, 255, 0.2)",
+            "rgba(255, 159, 64, 0.2)",
+          ],
+          borderColor: [
+            "#4c75bf",
+            "#ac4cbf",
+            "rgba(255, 206, 86, 1)",
+            "rgba(75, 192, 192, 1)",
+            "rgba(153, 102, 255, 1)",
+            "rgba(255, 159, 64, 1)",
+          ],
+          borderWidth: 1,
+        },
+      ],
+    },
+    responsive: true,
+    maintainAspectRatio: false,
+    options: {
+      scales: {
+        // yAxes: [
+        //   {
+        //     ticks: {
+        //       beginAtZero: true,
+        //     },
+        //   },
+        // ],
+      },
+    },
+  });
+</script>
+{% endblock %}

@@ -1,11 +1,13 @@
 {% extends "index.html" %}
 
+
+{% block content %}
+
 <head>
     {% if game_name %}
     <title>Steam Stats | {{game_name}}</title>
     {% endif %}
 </head>
-{% block content %}
 <div class="container">
     <div class="row">
         {% if game_name %}
@@ -15,14 +17,14 @@
     <div class="row">
         <ul class="nav nav-tabs" id="game-section-tabs" role="tablist">
             <li class="nav-item">
+                <a class="nav-link active" id="news-tab" data-toggle="tab" href="#news" role="tab" aria-controls="news"
+                    aria-selected="true">News</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" id="stats-tab" data-toggle="tab" href="#stats" role="tab" aria-controls="stats"
                     aria-selected="false">
                     Stats
                 </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link active" id="news-tab" data-toggle="tab" href="#news" role="tab" aria-controls="news"
-                    aria-selected="true">News</a>
             </li>
         </ul>
     </div>
@@ -31,7 +33,7 @@
 
 <div class="tab-content" id="myTabContent">
     <div class="tab-pane fade show active" id="news" role="tabpanel" aria-labelledby="news-tab">
-        <div class="container">
+        <div class="container home-tabs">
             {% if news_items%}
             {% for news in news_items %}
 
@@ -52,8 +54,8 @@
         </div>
     </div>
     <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
-        <div class="container">
-            <div class="row" style="height: 400px;">
+        <div class="container home-tabs">
+            <div class="chart-container">
                 <canvas id="myChart" width="100" height="100"></canvas>
             </div>
         </div>

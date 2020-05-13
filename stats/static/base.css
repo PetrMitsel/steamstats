@@ -1,3 +1,66 @@
+@import url('https://fonts.googleapis.com/css?family=Dosis|Quicksand');
+body{
+  font-family: Dosis;
+  background-color: offwhite;
+  font-size: 25px;
+}
 h1 {
-  color: blue;
+  color: #4c75bf;
+}
+h2 {
+  color:#4c75bf;
+}
+.chart-container {
+  width: 400px;
+  height: 400px;
+  margin-bottom: 20px;
+  padding-top: 10px;
+}
+#home-section-tabs .nav-link.active {
+  color:black;
+  background-color: #f9fcfc;
+}
+
+#home-section-tabs .nav-link {
+  color:white;
+  background-color:  #82a0d8;
+}
+#game-section-tabs .nav-link.active {
+  color:black;
+  background-color: #f9fcfc;
+}
+
+#game-section-tabs .nav-link {
+  color:white;
+  background-color:  #82a0d8;
+}
+
+.home-tabs{
+  background-color: #f9fcfc;
+  border: 1px solid transparent;
+  border-top-left-radius: .25rem;
+  border-top-right-radius: .25rem;
+  border-color:#f9fcfc #dee2e6 #dee2e6 #dee2e6
+}
+.navbar-custom{
+  background-color:  #4c75bf;
+}
+
+.navbar-custom .navbar-brand,
+.navbar-custom .navbar-text {
+    color:whitesmoke;
+}
+
+.navbar-custom .navbar-nav .nav-link {
+    color:whitesmoke;
+    font-size: 18px;
+}
+
+.profile-box {
+  border-style: solid;
+  border-color: black;
+}
+
+.home-banner {
+   background-image: url('stats/static/steam-banner.jpeg');
 }

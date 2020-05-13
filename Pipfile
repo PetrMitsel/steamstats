@@ -9,6 +9,8 @@ black = "*"
 [packages]
 django = "*"
 django-mathfilters = "*"
+livereload = "*"
+django-livereload-server = "*"
 
 [requires]
 python_version = "3.7"
