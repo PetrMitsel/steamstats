@@ -11,6 +11,8 @@ django = "*"
 django-mathfilters = "*"
 livereload = "*"
 django-livereload-server = "*"
+python-social-auth = {extras = ["django"],version = "*"}
+psycopg2-binary = "*"
 
 [requires]
 python_version = "3.7"

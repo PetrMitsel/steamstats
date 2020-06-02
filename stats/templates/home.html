@@ -7,10 +7,11 @@
         <h1 class="mx-auto">Welcome to Steam Stats!</h1>
       </div>
       <div class="col" style="border-style: solid; border-color: black; background-color: whitesmoke;">
-        <div>{{profile_info.personaname}}</div>
-        <img src="{{profile_info.avatarmedium}}" alt="No avatar available">
+        <div>{{request.user.personaname}}</div>
+        <img src="{{request.user.avatarmedium}}" alt="No avatar available">
         <div><i class="fa fa-users" aria-hidden="true"></i> {{friends_list | length}} friends</div>
         <div><i class="fa fa-gamepad" aria-hidden="true"></i> {{ games | length}} games</div>
+        <div>Member since: {{request.user.date_joined}}</div>
       </div>
     </div>
 

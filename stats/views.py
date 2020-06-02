@@ -1,30 +1,34 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.views import generic
-
-from stats.models import Game
-
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
+from django.views import View
 import json, urllib, os
 
-api_key = os.environ.get("STEAM_API_KEY")
+
+api_key = settings.SOCIAL_AUTH_STEAM_API_KEY
+
 
 """
-
 view functions
-
 """
+def login(request):
+    context = {}
+    return render(request,"login.html", context)
 
-
+@login_required
 def index(request):
     context = {}
-    steam_id = 76561198094609550
+    steam_id = request.user.steamid
     context["games"] = get_player_games(steam_id)
     context["recent_games"] = get_recent_games(steam_id)
     context["friends_list"] = get_friends_list(steam_id)
-    context["profile_info"] = get_player_profile(steam_id)
+    # context["profile_info"] = get_player_profile(steam_id)
     return render(request, "home.html", context)
 
-
+@login_required
 def game_detail(request, appid):
     context = {}
     context["news_items"] = get_game_news(appid)
@@ -35,8 +39,6 @@ def game_detail(request, appid):
 """
 steam_api methods
 """
-
-
 def get_game_news(appid):
     urlobj = urllib.request.urlopen(
         f"http://api.steampowered.com/ISteamNews/GetNewsForApp/v0002/?key={api_key}&appid={appid}&count=5&maxlength=300&format=json"
@@ -102,3 +104,8 @@ def get_player_profile(steam_id):
     data = json.loads(urlobj.read().decode("utf-8"))
     profile_info = data["response"]["players"][0]
     return profile_info
+
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect('stats:login')

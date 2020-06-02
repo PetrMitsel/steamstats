@@ -1,0 +1,14 @@
+{% extends "index.html" %}
+{% block content %}
+
+<body>
+    {% if user.is_authenticated %}
+    <a href="{% url "stats:logout" %}">Logout</a>
+    <br>
+    Hello, {{ user.personaname }}
+    {% else %}
+    <a href="{% url "social:begin" "steam" %}">Sign in with Steam</a>
+    {% endif %}
+</body>
+
+{% endblock %}
