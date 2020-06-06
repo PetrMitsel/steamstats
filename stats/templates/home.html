@@ -48,6 +48,11 @@
             <div class="row">
               <div class="col-sm">
                 {{ game.name }}
+                <div>
+                  <img
+                    src="http://media.steampowered.com/steamcommunity/public/images/apps/{{game.appid}}/{{game.img_logo_url}}.jpg"
+                    alt="Game icon not available">
+                </div>
               </div>
               <div class="col-sm">
                 You've played this game for: {{game.playtime_forever}} minutes or
@@ -71,6 +76,11 @@
               {% for recent_game in recent_games %}
               <li class="list-group-item home-tabs">
                 <div class="mb-2">{{ recent_game.name }}</div>
+                <div>
+                  <img
+                    src="http://media.steampowered.com/steamcommunity/public/images/apps/{{recent_game.appid}}/{{recent_game.img_logo_url}}.jpg"
+                    alt="Game icon not available">
+                </div>
                 <div class="mb-2">
                   Playtime Last two weeks: {{recent_game.playtime_2weeks}} minutes
                   or {{recent_game.playtime_2weeks | div:60| truncatechars:6}} hours
